@@ -10,10 +10,15 @@ class Kompensasi extends Model
 
     protected $fillable = [
         'id_kendaraan_masuk',
-        'tipe_kompensasi',
+        'jumlah',
+        'status',
         'nama_pemilik',
+        'bukti_foto',
         'keterangan',
+        'diajukan_pada',
+        'diproses_pada',
     ];
+
 
     public function kendaraanMasuk()
     {

@@ -1,28 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<!-- Boxicons -->
-	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 	<!-- My CSS -->
-	<link rel="stylesheet" href="{{asset('assets/backend/style.css')}}">
-	<title>AdminHub</title>
+	<link rel="stylesheet" href="{{ asset('assets/backend/style.css') }}">
+	<title>Dashboard Admin</title>
+
+	<style>
+		.box-info {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+			gap: 1rem;
+			margin-top: 2rem;
+			width: 100%;
+		}
+
+		.box-info li {
+			align-items: center;
+			gap: 1rem;
+			padding: 1rem;
+			border-radius: 12px;
+			width: 100%;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+			color: white;
+
+		}
+
+		.box-info li i {
+			font-size: 2.5rem;
+			padding: 1rem;
+			border-radius: 50%;
+			min-width: 60px;
+			text-align: center;
+			background: rgba(255, 255, 255, 0.2);
+		}
+
+		.box-info li .text h3 {
+			margin: 0;
+			font-size: 1.4rem;
+		}
+
+		.box-info li .text p {
+			margin: 0;
+			font-size: 0.9rem;
+		}
+
+		.bg-1 {
+			background: #3b82f6;
+		}
+
+		/* biru - kendaraan masuk */
+		.bg-2 {
+			background: #10b981;
+		}
+
+		/* hijau - kendaraan keluar */
+		.bg-3 {
+			background: #f59e0b;
+		}
+
+		/* kuning - data kendaraan */
+		.bg-4 {
+			background: #ef4444;
+		}
+
+		/* merah - slot mobil */
+		.bg-5 {
+			background: #8b5cf6;
+		}
+
+		/* ungu - slot motor */
+	</style>
+
 </head>
+
 <body>
 
-
 	<!-- SIDEBAR -->
-      @include('layouts.part.sidebar')
-	<!-- SIDEBAR -->
+	@include('layouts.part.sidebar')
+	<!-- END SIDEBAR -->
 
 	<!-- CONTENT -->
 	<section id="content">
 		<!-- NAVBAR -->
-        @include('layouts.part.navbar')
-		<!-- NAVBAR -->
-
+		@include('layouts.part.navbar')
+		<!-- END NAVBAR -->
 
 		<!-- MAIN -->
 		<main>
@@ -30,143 +97,215 @@
 				<div class="left">
 					<h1>Dashboard</h1>
 					<ul class="breadcrumb">
-						<li>
-							<a href="#">Dashboard</a>
-						</li>
-						<li><i class='bx bx-chevron-right' ></i></li>
-						<li>
-							<a class="active" href="#">Home</a>
-						</li>
+						<li><a href="#">Dashboard</a></li>
+						<li><i class='bx bx-chevron-right'></i></li>
+						<li><a class="active" href="#">Admin</a></li>
 					</ul>
 				</div>
-				<a href="#" class="btn-download">
-					<i class='bx bxs-cloud-download' ></i>
-					<span class="text">Download PDF</span>
-				</a>
 			</div>
 
+			<p style="font-size:25px;">Selamat datang, <strong>{{ Auth::user()->name }}</strong></p>
+
+
 			<ul class="box-info">
-				<li>
-					<i class='bx bxs-calendar-check' ></i>
+
+
+				<li class="bg-1">
+					<i class='bx bx-log-in-circle'></i>
 					<span class="text">
-						<h3>1020</h3>
-						<p>New Order</p>
+						<h3>{{ $totalMasuk }}</h3>
+						<p>Sedang Terparkir</p>
 					</span>
 				</li>
-				<li>
-					<i class='bx bxs-group' ></i>
+				<li class="bg-2">
+					<i class='bx bx-log-out-circle'></i>
 					<span class="text">
-						<h3>2834</h3>
-						<p>Visitors</p>
+						<h3>{{ $totalKeluar }}</h3>
+						<p>Kendaraan Keluar</p>
 					</span>
 				</li>
-				<li>
-					<i class='bx bxs-dollar-circle' ></i>
+				<li class="bg-3">
+					<i class='bx bx-spreadsheet'></i>
 					<span class="text">
-						<h3>$2543</h3>
-						<p>Total Sales</p>
+						<h3>{{ $totalKendaraan }}</h3>
+						<p>Total Data Kendaraan</p>
+					</span>
+				</li>
+				{{--
+			</ul>
+			<ul class="box-info"> --}}
+				<li class="bg-4">
+					<i class='bx bx-car' style="color:black; background:#10b98193;"></i>
+					<span class="text">
+						<h3>{{ $sisaMobil }}</h3>
+						<p>Sisa Slot Mobil</p>
+					</span>
+				</li>
+				<li class="bg-5">
+					<i class='bx bx-cycling' style="color:black; background:#8a5cf659;"></i>
+					<span class="text">
+						<h3>{{ $sisaMotor }}</h3>
+						<p>Sisa Slot Motor</p>
 					</span>
 				</li>
 			</ul>
 
-			<div class="table-data">
-				<div class="order">
-					<div class="head">
-						<h3>Recent Orders</h3>
-						<i class='bx bx-search' ></i>
-						<i class='bx bx-filter' ></i>
-					</div>
-					<table>
-						<thead>
-							<tr>
-								<th>User</th>
-								<th>Date Order</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<img src="{{asset('assets/backend/img/people.png')}}">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="{{asset('assets/backend/img/people')}}.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="{{asset('assets/backend/img/people')}}.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status process">Process</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="{{asset('assets/backend/img/people')}}.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status pending">Pending</span></td>
-							</tr>
-							<tr>
-								<td>
-									<img src="{{asset('assets/backend/img/people')}}.png">
-									<p>John Doe</p>
-								</td>
-								<td>01-10-2021</td>
-								<td><span class="status completed">Completed</span></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="todo">
-					<div class="head">
-						<h3>Todos</h3>
-						<i class='bx bx-plus' ></i>
-						<i class='bx bx-filter' ></i>
-					</div>
-					<ul class="todo-list">
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-						<li class="not-completed">
-							<p>Todo List</p>
-							<i class='bx bx-dots-vertical-rounded' ></i>
-						</li>
-					</ul>
-				</div>
+			<div style="display: flex; gap: 2rem; margin-top: 3rem; flex-wrap: wrap;">
+    <!-- Grafik Masuk -->
+    <div style="
+        flex: 1;
+        min-width: 400px;
+        background: white;
+        padding: 1.5rem 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+    ">
+        <h2 style="margin-bottom: 1rem; font-size: 1.25rem; color: #111;">Grafik Kendaraan Masuk per Bulan</h2>
+        <canvas id="grafikMasuk"></canvas>
+    </div>
+
+    <!-- Grafik Keuangan -->
+    <div style="
+        flex: 1;
+        min-width: 400px;
+        background: white;
+        padding: 1.5rem 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+    ">
+        <h2 style="margin-bottom: 1rem; font-size: 1.25rem; color: #111;">Grafik Pemasukan & Pengeluaran per Bulan</h2>
+        <canvas id="grafikKeuangan"></canvas>
+    </div>
+</div>
+
+			{{-- <div style="
+	                      margin-top: 3rem;
+	                      background: white;
+	                      padding: 1.5rem 2rem;
+	                      border-radius: 12px;
+                    	  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	                      width: 45%;
+	                      hight:150px;
+	                      max-width: 1000px;
+	                      margin-right: auto;">
+				<h2 style="margin-bottom: 1rem; font-size: 1.25rem; 
+						  color: #111;">Grafik Kendaraan Masuk per
+					Bulan</h2>
+				<canvas id="grafikMasuk"></canvas>
 			</div>
-	
+			<div style="
+                        margin-top: 3rem;
+                        background: white;
+                        padding: 1.5rem 2rem;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                        width: 45%;
+                        max-width: 1000px;
+                        margin-left: auto;">
+				<h2 style="margin-bottom: 1rem; font-size: 1.25rem; color: #111;">
+					Grafik Pemasukan & Pengeluaran per Bulan
+				</h2>
+				<canvas id="grafikKeuangan"></canvas>
+			</div> --}}
+
 		</main>
-		<!-- MAIN -->
-
-        
+		<!-- END MAIN -->
 	</section>
-	<!-- CONTENT -->
-	
+	<!-- END CONTENT -->
 
-	<script src="{{asset('assets/backend/script.js')}}"></script>
+	<script src="{{ asset('assets/backend/script.js') }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Grafik Kendaraan Masuk
+    const ctx = document.getElementById('grafikMasuk').getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(139, 92, 246, 0.5)');
+    gradient.addColorStop(1, 'rgba(139, 92, 246, 0.1)');
+
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($labels) !!},
+            datasets: [{
+                label: 'Jumlah Kendaraan Masuk',
+                data: {!! json_encode($dataMasuk) !!},
+                backgroundColor: gradient,
+                borderColor: '#8b5cf6',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#8b5cf6'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#f3f4f6'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: '#f3f4f6'
+                    }
+                }
+            }
+        }
+    });
+
+    // Grafik Keuangan
+    const ctxKeuangan = document.getElementById('grafikKeuangan').getContext('2d');
+
+    const chartKeuangan = new Chart(ctxKeuangan, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($labels) !!},
+            datasets: [
+                {
+                    label: 'Pemasukan',
+                    data: {!! json_encode($dataPemasukan) !!},
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#10b981'
+                },
+                {
+                    label: 'Pengeluaran',
+                    data: {!! json_encode($dataPengeluaran) !!},
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ef4444'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#f3f4f6'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: '#f3f4f6'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+
 </body>
+
 </html>

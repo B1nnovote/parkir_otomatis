@@ -10,7 +10,7 @@ class KendaraanKeluar extends Model
     protected $fillable = [
         'id_kendaraan_masuk',
         'waktu_keluar',
-        'status',
+        'status_kondisi',
     ];
 
     public function kendaraanMasuk()

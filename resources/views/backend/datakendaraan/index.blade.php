@@ -1,55 +1,155 @@
-@extends('layouts.part')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
-<div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3">
-        <h4>Data Kendaraan</h4>
-        <a href="{{ route('datakendaraan.create') }}" class="btn btn-primary">Tambah Kendaraan</a>
-    </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Kendaraan</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-    <div class="card shadow">
-        <div class="card-body">
-            <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>No</th>
-                        <th>Plat Nomor</th>
-                        <th>Jenis</th>
-                        <th>Pemilik</th>
-                        <th>Status Pemilik</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($dataKendaraan as $data)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $data->plat_nomor }}</td>
-                            <td>{{ ucfirst($data->jenis) }}</td>
-                            <td>{{ $data->pemilik}}</td>
-                            <td>{{ $data->status_pemilik}}</td>
-                            <td>
-                                    @if(Auth::user()->isAdmin == 1)
-                                        <a href="{{ route('datakendaraan.edit', $data->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                        <form action="{{ route('datakendaraan.destroy', $data->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus?')">
-                                            @csrf @method('DELETE')
-                                            <button class="btn btn-sm btn-danger">Hapus</button>
-                                        </form>
-                                    @else
-                                        <a href="/datakendaraan/{{$data['id']}}"  class="btn btn-sm btn-info">Show</a>
+<body>
+
+    @include('layouts.part.sidebar')
+
+    <section id="content">
+        @include('layouts.part.navbar')
+        <main>
+            <div class="container mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="btn btn-sm btn-label-primary rounded-pill px-3 py-2"
+                        style="pointer-events: none; font-size:30px;">
+                        Data Kendaraan
+                    </span>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('datakendaraan.create') }}" class="btn"
+                                style="background-color:#696cff; color:white;">
+                                <i class="bx bx-plus"></i> Tambah
+                            </a>
+
+                            <a href="{{ route('datakendaraan.export.pdf', request()->query()) }}"
+                                class="btn btn-danger">
+                                <i class="bx bxs-file-pdf"></i> Export PDF
+                            </a>
+
+                            <a href="{{ route('datakendaraan.export.excel', request()->query()) }}"
+                                class="btn btn-success">
+                                <i class="bx bxs-file-export"></i> Export Excel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                <!-- Search Bar Only -->
+                <form action="{{ route('datakendaraan.index') }}" method="GET" class="mb-3">
+                    <div class="input-group" style="max-width: 500px;">
+                        <input type="text" id="search-kendaraan" name="search" class="form-control"
+                            placeholder="Cari plat nomor, jenis, atau status pemilik..."
+                            value="{{ request('search') }}">
+                        <button class="btn btn-dark" type="submit"><i class="bx bx-search"></i></button>
+                        <a href="{{ route('datakendaraan.index') }}" class="btn btn-outline-secondary ms-2">Reset</a>
+
+                    </div>
+                </form>
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover align-middle text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Plat Nomor</th>
+                                        <th>Jenis</th>
+                                        <th>Pemilik</th>
+                                        <th>Status Pemilik</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php $no = 1; @endphp
+                                    @foreach ($dataKendaraan as $data)
+                                        <tr>
+                                            <td>{{ $no++ }}</td>
+                                            <td>{{ $data->no_polisi }}</td>
+                                            <td>{{ ucfirst($data->jenis_kendaraan) }}</td>
+                                            <td>{{ $data->pemilik ?? '-' }}</td>
+                                            <td>
+                                                <span class="badge bg-info text-dark">
+                                                    {{ ucfirst($data->status_pemilik) }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{{ route('datakendaraan.edit', $data->id) }}"
+                                                        class="btn btn-sm btn-warning"><i class="bx bx-edit"></i></a>
+                                                    <span style=" font-size:20px;">|</span>
+                                                    <form action="{{ route('datakendaraan.destroy', $data->id) }}"
+                                                        method="POST" onsubmit="return confirm('Yakin hapus?')">
+                                                        @csrf @method('DELETE')
+                                                        <button class="btn btn-sm btn-danger"><i
+                                                                class="bx bx-trash"></i></button>
+                                                    </form>
+                                                    <span style=" font-size:20px;">|</span>
+                                                    <a href="/datakendaraan/{{ $data->id }}"
+                                                        class="btn btn-sm btn-info"><i class="bx bx-show"></i></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    @if ($dataKendaraan->isEmpty())
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">Belum ada data kendaraan.
+                                            </td>
+                                        </tr>
                                     @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr><td colspan="5" class="text-center">Belum ada data.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-@endsection
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- Scripts -->
+
+    <script>
+        $(function() {
+            $("#search-kendaraan").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('datakendaraan.autocomplete') }}",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2, // mulai nyari setelah 2 huruf
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

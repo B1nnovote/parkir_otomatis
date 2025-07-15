@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->decimal('jumlah', 10, 2);
             $table->foreignId('id_pembayaran')->constrained('pembayarans')->onDelete('cascade');
+            $table->string('keterangan');
+            $table->string('jenis_transaksi');
             $table->timestamp('waktu_transaksi');
             $table->timestamps();
         });
-        
+
     }
 
     /**

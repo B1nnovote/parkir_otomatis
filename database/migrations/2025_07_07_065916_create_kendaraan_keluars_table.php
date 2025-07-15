@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_kendaraan_masuk')->constrained('kendaraan_masuks')->onDelete('cascade');
             $table->timestamp('waktu_keluar');
-            $table->enum('status_kondisi', ['baik', 'karcis hilang', 'kerusakan','kehilangan','merusak'])->default('baik');
+            $table->string('status_kondisi');
             $table->timestamps();
         });
         

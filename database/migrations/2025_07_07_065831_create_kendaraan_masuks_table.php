@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('kendaraan_masuks', function (Blueprint $table) {
             $table->id();
             $table->timestamp('waktu_masuk');
-            $table->enum('status_parkir', ['masih parkir', 'sudah keluar'])->default('masih parkir');
+            $table->enum('status_parkir', ['sedang parkir', 'sudah keluar'])->default('sedang parkir');
             $table->foreignId('id_kendaraan')->constrained('data_kendaraans')->onDelete('cascade');
             $table->timestamps();
         });

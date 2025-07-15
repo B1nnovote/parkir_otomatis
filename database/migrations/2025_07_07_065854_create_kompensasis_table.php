@@ -14,12 +14,17 @@ return new class extends Migration
         Schema::create('kompensasi', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_kendaraan_masuk')->constrained('kendaraan_masuks')->onDelete('cascade');
-            $table->enum('tipe_kompensasi', ['Internal', 'Eksternal'])->default('Internal');
-            $table->string('nama_pemilik');
-            $table->text('keterangan');
+            $table->unsignedBigInteger('jumlah');
+            $table->enum('status', ['pending', 'disetujui', 'ditolak'])->default('pending');
+            $table->string('nama_pemilik')->nullable();
+            $table->string('bukti_foto')->nullable();
+            $table->text('keterangan')->nullable();
+            $table->timestamp('diajukan_pada')->nullable();
+            $table->timestamp('diproses_pada')->nullable();
+
             $table->timestamps();
         });
-        
+
     }
 
     /**

@@ -9,12 +9,18 @@ class KendaraanMasuk extends Model
     protected $table = 'kendaraan_masuks';
 
     protected $fillable = [
+       
         'waktu_masuk',
         'status_parkir',
         'id_kendaraan',
     ];
 
-    public function kendaraan()
+    protected $casts = [
+        'waktu_masuk' => 'datetime',
+    ];
+    
+
+    public function dataKendaraan()
     {
         return $this->belongsTo(DataKendaraan::class, 'id_kendaraan');
     }

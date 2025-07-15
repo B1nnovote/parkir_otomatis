@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('no_polisi')->unique();
             $table->enum('jenis_kendaraan', ['mobil', 'motor']);
-            $table->string('pemilik');
+            $table->string('pemilik')->nullable(); 
             $table->enum('status_pemilik', ['tamu', 'guru','karyawan']);
             $table->timestamps();
         });
+        
     }
 
     /**

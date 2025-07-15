@@ -13,7 +13,8 @@ class Pembayaran extends Model
         'id_kendaraan_masuk',
         'id_kendaraan_keluar',
         'id_kompensasi',
-        'harga',
+        'id_petugas',
+        'total',
         'pembayaran',
     ];
 
@@ -36,5 +37,11 @@ class Pembayaran extends Model
     {
         return $this->hasOne(Keuangan::class, 'id_pembayaran');
     }
+
+    public function petugas()
+{
+    return $this->belongsTo(User::class, 'id_petugas');
+}
+
 }
 
